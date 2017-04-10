@@ -14,7 +14,7 @@ class Clovece:
         clovece = [(-1, -1) for i in range(40)]
 
         # Ulozime si, na ktorych polickach su jednotlive figurky hracov
-        policko = {i: [0 for j in range(self.fig)] for i in range(number)}
+        policko = {i: [10*i for j in range(self.fig)] for i in range(number)}
 
         # Stav plochy, figuriek, pocet hracov, v ktorom kole sme, ktory hrac bol posledne na tahu
         self.status = (clovece, policko, number, 0, 0)
@@ -52,7 +52,9 @@ class Clovece:
                 pomH = kolizne[0]
                 pomF = kolizne[1]
                 print("Kolizia s figurkou", figurka, "hraca", hrac)
-                self.status[1][pomH][pomF] = 0  # ak tam uz je figurka, tak ta prva ide na 0
+                # ak tam uz je figurka, tak ta prva ide na pociatok
+                self.status[1][pomH][pomF] = 10*pomH
+            clovece[policko[hrac][figurka]] = (-1, -1) #vyprazdnime to, kde prave bola
             policko[hrac][figurka] += hod  # figurka sa posunie o hodeny pocet policok
             clovece[policko[hrac][figurka]] = (hrac, figurka)  # nova na dane policko
         print()
@@ -98,16 +100,17 @@ class Clovece:
     def ziskaj_status(self):
         return [self.status[i] for i in range(3)]
 
+
 # Spyta sa na pocet hracov a vytvori novu hru
 def novaHra():
     # Na zaciatku sa spytame na pocet hracov. Ten musi byt z intervalu [1,4]
     number = 0  # pocet hracov clovece
     minp = 2
-    maxp = 6
+    maxp = 4
     while number < minp or number > maxp:
-        number = int(input("Zadajte pocet hracov (2 - 6): "))
+        number = int(input("Zadajte pocet hracov (" + str(minp) + " - " + str(maxp) + "): "))
         if number < minp or number > maxp: print("Neplatny pocet hracov!")
-        return Clovece(number)
+    return Clovece(number)
 
 clovece = novaHra()
 clovece.hraj()
