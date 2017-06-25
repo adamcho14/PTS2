@@ -1,15 +1,15 @@
-from random import randint
+#from random import randint
 
-status = []  # premenna, co zachytava sucasny status
+clovece = None  # premenna, co zachytava sucasny status
 
 # Trieda reprezentujuca jehu hru clovece
-class Clovece:
+class Clovece(object):
     fig = 4; plocha = 40  # pocet figuriek, velkost plochy
 
     status = ()
 
     # Konstruktor vytvori hru s danym poctom hracov z int <2, 6>
-    def __init__(self, number):
+    def __init__(self, number = 4 ):
         # Reprezentuje plochu clovece. Hodnoty typu (hrac, figurka)
         clovece = [(-1, -1) for i in range(40)]
 
@@ -36,17 +36,21 @@ class Clovece:
         clovece = self.status[0]
 
         print("Na tahu je hrac", hrac)
-        hod = randint(1, 6) #hod kocky
+        #hod = randint(1, 6) #hod kocky
+        hod = 2
         print("Hodili ste", hod)
-        figurka = -1;
+        #figurka = -1;
 
-        while figurka < 0 or figurka >= self.fig:
-            figurka = int(input("Chcem ist figurkou č. (0 - 3): "))  # hrac si vyberie figurku
-            if figurka < 0 or figurka >= self.fig: print("Neplatne cislo figurky!")
+        #while figurka < 0 or figurka >= self.fig:
+            #figurka = int(input("Chcem ist figurkou č. (0 - 3): "))  # hrac si vyberie figurku
+            #if figurka < 0 or figurka >= self.fig: print("Neplatne cislo figurky!")
+
+        figurka = (hrac + kolo) % 4
 
         kolizne = self.kolizia(policko[hrac][figurka] + hod)  # riesenie kolizii: druhy vyhrava
         print(kolizne)
-        if kolizne[0] == hrac: print("Nemozno sa posunut. Na tomto policku uz mate figurku")
+        if kolizne[0] == hrac:
+            print("Nemozno sa posunut. Na tomto policku uz mate figurku")
         else:
             if kolizne != (-1, -1):
                 pomH = kolizne[0]
@@ -63,6 +67,7 @@ class Clovece:
             print("Hrac", hrac, "vyhral. Gratulujeme!")
             exit(0)
         self.status = (clovece, policko, number, kolo, hrac)
+        return policko[hrac][figurka]
 
     def vypis_kolo(self, fin):
         pocet = self.status[2]
@@ -90,12 +95,14 @@ class Clovece:
             self.status = (self.status[0], self.status[1], self.status[2],
                            self.status[3] + 1, self.status[4])
 
-            inp = input("Ukoncit hru: \'a\'\nPokracovat: lubovolne ine")
+            #inp = input("Ukoncit hru: \'a\'\nPokracovat: lubovolne ine")
             status = self.ziskaj_status()
-            if inp == 'a':
-                print("Rozhodli ste sa ukoncit hru.")
-                self.vypis_kolo(1)
-                exit(0)
+            #if inp == 'a':
+                #print("Rozhodli ste sa ukoncit hru.")
+                #self.vypis_kolo(1)
+                #exit(0)
+            if self.status[3] == 12:
+                return (self.status[3], self.status[4])
 
     def ziskaj_status(self):
         return [self.status[i] for i in range(3)]
@@ -104,13 +111,15 @@ class Clovece:
 # Spyta sa na pocet hracov a vytvori novu hru
 def novaHra():
     # Na zaciatku sa spytame na pocet hracov. Ten musi byt z intervalu [1,4]
-    number = 0  # pocet hracov clovece
-    minp = 2
-    maxp = 4
-    while number < minp or number > maxp:
-        number = int(input("Zadajte pocet hracov (" + str(minp) + " - " + str(maxp) + "): "))
-        if number < minp or number > maxp: print("Neplatny pocet hracov!")
-    return Clovece(number)
+    #number = 0  # pocet hracov clovece
+    #minp = 2
+    #maxp = 4
+    #while number < minp or number > maxp:
+        #number = int(input("Zadajte pocet hracov (" + str(minp) + " - " + str(maxp) + "): "))
+        #if number < minp or number > maxp: print("Neplatny pocet hracov!")
+    #return Clovece(number)
+    return Clovece(4)
 
-clovece = novaHra()
-clovece.hraj()
+if __name__ == "__main__":
+    clovece = novaHra()
+    clovece.hraj()
